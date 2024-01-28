@@ -1,6 +1,6 @@
 from pathlib import Path
 
-
+# BASE DIR should always point to the manage.py directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-inqag6i(&vod-tmvst933(=-v-(69i3zgb*ud_+vl0(y2#^@hz'
@@ -87,6 +87,12 @@ USE_I18N = True
 
 USE_TZ = True
 
+# URL Prefix in the client
 STATIC_URL = 'static/'
+
+# Directories on the file system
+STATICFILES_DIRS = (
+    BASE_DIR / "staticfiles",
+)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
