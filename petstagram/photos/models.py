@@ -31,3 +31,11 @@ class PetPhoto(models.Model):
     )
 
     pets = models.ManyToManyField(Pet)
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,  # Done only on `create`
+    )
+
+    modified_at = models.DateTimeField(
+        auto_now=True,  # On every save
+    )
