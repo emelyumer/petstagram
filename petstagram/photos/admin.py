@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from petstagram.photos.models import PetPhoto
+
+
+@admin.register(PetPhoto)
+class PetPhotoAdmin(admin.ModelAdmin):
+    pass
+
