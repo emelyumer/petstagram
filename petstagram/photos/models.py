@@ -1,7 +1,26 @@
-from django.core.validators import MinLengthValidator, MaxLengthValidator
+from django.core.exceptions import ValidationError
+from django.core.validators import MinLengthValidator, MaxLengthValidator, BaseValidator
 from django.db import models
 
 from petstagram.pets.models import Pet
+
+SIZE_5_MB = 1 * 1024 * 1024
+
+
+class MaxFileSizeValidator(BaseValidator):
+    def clean(self, x):
+        return x.size
+
+    def compare(self, file_size, max_size):
+        return max_size < file_size
+
+
+def validate_image_size_less_than_5mb(value):
+    # invalid:
+    if value.size > SIZE_5_MB:
+        raise ValidationError('File size should be less than 5MB')
+    # valid:
+    # do nothing
 
 
 class PetPhoto(models.Model):
@@ -13,6 +32,10 @@ class PetPhoto(models.Model):
         upload_to='pet/photos',
         blank=False,
         null=False,
+        validators=(
+            # validate_image_size_less_than_5mb,
+            MaxFileSizeValidator(limit_value=SIZE_5_MB),
+        )
     )
 
     description = models.TextField(
