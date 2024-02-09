@@ -4,7 +4,7 @@ from django.db import models
 
 from petstagram.pets.models import Pet
 
-SIZE_5_MB = 1 * 1024 * 1024
+SIZE_5_MB = 5 * 1024 * 1024
 
 
 class MaxFileSizeValidator(BaseValidator):
