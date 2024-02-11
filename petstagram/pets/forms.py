@@ -26,10 +26,27 @@ class PetCreateForm(PetBaseForm):
     pass
 
 
-class PetEditForm(PetBaseForm):
+class ReadonlyFieldsFromMixin:
+    readonly_fields = ()
+
+    def _apply_readonly_on_fields(self):
+        for field_name in self.readonly_fields_names:
+            self.fields[field_name].widget.attrs['readonly'] = 'readonly'
+
+    @property
+    def readonly_field_names(self):
+        if self.readonly_fields == '__all__':
+            return self.field.keys()
+
+        return self.readonly_fields
+
+class PetEditForm(PetBaseForm, ReadonlyFieldsFromMixin):
+    readonly_fields = ('date_of_birth',)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["date_of_birth"].widget.attrs['readonly'] = 'readonly'
+        self._apply_readonly_on_fields()
+
 
     def clean_date_of_birth(self):
         # date_of_birth = self.cleaned_data["date_of_birth"]
@@ -40,7 +57,16 @@ class PetEditForm(PetBaseForm):
         return self.instance.date_of_birth
 
 
-class PetDeleteForm(PetBaseForm):
-    pass
+class PetDeleteForm(PetBaseForm, ReadonlyFieldsFromMixin):
+    readonly_fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._apply_readonly_on_fields()
+
+    def save(self, commit=True):
+        if commit:
+            self.instance.delete()
+        return self.instance
 
 
