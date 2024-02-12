@@ -30,7 +30,7 @@ class ReadonlyFieldsFromMixin:
     readonly_fields = ()
 
     def _apply_readonly_on_fields(self):
-        for field_name in self.readonly_fields_names:
+        for field_name in self.readonly_field_names:
             self.fields[field_name].widget.attrs['readonly'] = 'readonly'
 
     @property
@@ -40,13 +40,13 @@ class ReadonlyFieldsFromMixin:
 
         return self.readonly_fields
 
+
 class PetEditForm(PetBaseForm, ReadonlyFieldsFromMixin):
     readonly_fields = ('date_of_birth',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._apply_readonly_on_fields()
-
 
     def clean_date_of_birth(self):
         # date_of_birth = self.cleaned_data["date_of_birth"]
