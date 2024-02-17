@@ -36,7 +36,7 @@ class ReadonlyFieldsFromMixin:
     @property
     def readonly_field_names(self):
         if self.readonly_fields == '__all__':
-            return self.field.keys()
+            return self.fields.keys()
 
         return self.readonly_fields
 
