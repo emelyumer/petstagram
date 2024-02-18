@@ -41,7 +41,7 @@ class PetPhoto(models.Model):
     description = models.TextField(
         blank=True,
         null=True,
-        max_length=MIN_DESCRIPTION_LENGTH,
+        max_length=MAX_DESCRIPTION_LENGTH,
         validators=(
             MinLengthValidator(MIN_DESCRIPTION_LENGTH),
         ),
