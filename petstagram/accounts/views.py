@@ -1,4 +1,10 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import views as auth_views, login, logout
+from django.urls import reverse_lazy
+from django.views import generic as views
+
+from petstagram.accounts.forms import PetstagramUserCreationForm
+from petstagram.accounts.models import Profile
 
 
 # Callable
@@ -6,23 +12,31 @@ from django.shortcuts import render, redirect
 # - objects with overriden __call__ method
 
 
-def signup_user(request):
-    context = {}
-    return render(request, "accounts/signup_user.html", context)
+
+class SignInUserView(auth_views.LoginView):
+    template_name = "accounts/signin-user.html"
 
 
-def signin_user(request):
-    context = {}
-    return render(request, "accounts/signin-user.html", context)
+class SignUpUserView(views.CreateView):
+    template_name = "accounts/signup_user.html"
+    form_class = PetstagramUserCreationForm
+    success_url = reverse_lazy('index')
+
+    def form_valid(self, form):
+        # form_valid going to call 'save'
+        result = super().form_valid(form)
+        login(self.request, form.instance)
+        return result
 
 
 def signout_user(request):
+    logout(request)
     return redirect('index')
 
 
-def details_profile(request, pk):
-    context = {}
-    return render(request, "accounts/details_profile.html", context)
+class ProfileDetailView(views.DetailView):
+    queryset = Profile.objects.all()
+    template_name = "accounts/details_profile.html"
 
 
 def edit_profile(request, pk):
